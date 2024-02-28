@@ -1,0 +1,155 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:gsc="http://ws.estesexpress.com/schema/2019/01/ratequote" xmlns:exla="http://ws.estesexpress.com/schema/vocabulary" xmlns:tns="http://ws.estesexpress.com/ratequote" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="RateQuoteService" targetNamespace="http://ws.estesexpress.com/ratequote">
+	<wsdl:documentation>Rate quote web service. Copyright 2019 Estes Express Lines, Inc.</wsdl:documentation>
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.estesexpress.com/ratequote">
+			<xsd:complexType name="AuthenticationType">
+				<xsd:sequence>
+					<xsd:element name="user" type="tns:UserType"/>
+					<xsd:element name="password" type="tns:PasswordType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="EchoRequestType">
+				<xsd:sequence>
+					<xsd:element name="input" type="tns:EchoRequestInputType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="EchoRequestInputType">
+				<xsd:restriction base="xsd:string">
+					<xsd:maxLength value="100"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ErrorCodeType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="ErrorMessageType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="1"/>
+					<xsd:maxLength value="300"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:complexType name="ErrorMessagesType">
+				<xsd:annotation>
+					<xsd:documentation>List of error messages</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" name="error" type="tns:ErrorMessageType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ErrorType">
+				<xsd:annotation>
+					<xsd:documentation>List of errors</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="code" type="tns:ErrorCodeType"/>
+					<xsd:element name="message" type="tns:ErrorMessageType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ErrorsType">
+				<xsd:annotation>
+					<xsd:documentation>List of error messages</xsd:documentation>
+				</xsd:annotation>
+				<xsd:sequence>
+					<xsd:element maxOccurs="unbounded" name="error" type="tns:ErrorType"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:simpleType name="PasswordType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="5"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<xsd:simpleType name="UserType">
+				<xsd:restriction base="xsd:string">
+					<xsd:minLength value="5"/>
+					<xsd:maxLength value="10"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			<!--  Define SOAP message names here.  -->
+			<!--  Authentication SOAP Header   -->
+			<xsd:element name="auth" type="tns:AuthenticationType"/>
+				<!--  Echo Request Type  -->
+			<xsd:element name="echoRequest" type="tns:EchoRequestType"/>
+			<!--  Echo Response Type  -->
+			<xsd:element name="echoResponse" type="xsd:string"/>
+			<!--  General Fault  -->
+			<xsd:element name="generalError" type="tns:ErrorsType"/>
+			<!--  Schema Validation Fault  -->
+			<xsd:element name="schemaError" type="tns:ErrorMessagesType"/>
+		</xsd:schema>
+		<xsd:schema xmlns:gsc="http://ws.estesexpress.com/schema/2019/01/ratequote" xmlns:xsd="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.estesexpress.com/schema/2019/01/ratequote">
+			<!--   Reference all schemas  -->
+			<xsd:include schemaLocation="RateQuoteService?xsd=rateRequest.xsd"/>
+			<xsd:include schemaLocation="RateQuoteService?xsd=rateQuote.xsd"/>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="schemaErrorMsg">
+		<wsdl:part name="fault" element="tns:schemaError"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="authenticationMsg">
+		<wsdl:part name="authentication" element="tns:auth"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="generalErrorMsg">
+		<wsdl:part name="fault" element="tns:generalError"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="rateRequestMsg">
+		<wsdl:part name="rateRequest" element="gsc:rateRequest"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="echoResponseMsg">
+		<wsdl:part name="echoResponse" element="tns:echoResponse"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="echoRequestMsg">
+		<wsdl:part name="echoRequest" element="tns:echoRequest"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="rateQuoteMsg">
+		<wsdl:part name="rateQuote" element="gsc:rateQuote"> </wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="ratingPortType">
+		<wsdl:operation name="echo">
+			<wsdl:input name="echoRequest" message="tns:echoRequestMsg"> </wsdl:input>
+			<wsdl:output name="echoResponse" message="tns:echoResponseMsg"> </wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getQuote">
+			<wsdl:input name="rateRequest" message="tns:rateRequestMsg"> </wsdl:input>
+			<wsdl:output name="quoteInfo" message="tns:rateQuoteMsg"> </wsdl:output>
+			<wsdl:fault name="schemaErrorMessage" message="tns:schemaErrorMsg"> </wsdl:fault>
+			<wsdl:fault name="generalErrorMessage" message="tns:generalErrorMsg"> </wsdl:fault>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="rateBinding" type="tns:ratingPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<wsdl:operation name="echo">
+			<soap:operation soapAction="http://ws.estesexpress.com/ratequote/echo" style="document"/>
+			<wsdl:input name="echoRequest">
+				<soap:body parts="echoRequest" use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="echoResponse">
+				<soap:body parts="echoResponse" use="literal"/>
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getQuote">
+			<soap:operation soapAction="http://ws.estesexpress.com/ratequote/getQuote" style="document"/>
+			<wsdl:input name="rateRequest">
+				<soap:header message="tns:authenticationMsg" part="authentication" use="literal"> </soap:header>
+				<soap:body parts="rateRequest" use="literal"/>
+			</wsdl:input>
+			<wsdl:output name="quoteInfo">
+				<soap:body parts="rateQuote" use="literal"/>
+			</wsdl:output>
+			<wsdl:fault name="schemaErrorMessage">
+				<soap:fault name="schemaErrorMessage" use="literal"/>
+			</wsdl:fault>
+			<wsdl:fault name="generalErrorMessage">
+				<soap:fault name="generalErrorMessage" use="literal"/>
+			</wsdl:fault>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="RateQuoteService">
+		<wsdl:documentation>Rate quote web service</wsdl:documentation>
+		<wsdl:port name="ratingPortType" binding="tns:rateBinding">
+			<soap:address location="https://www.estes-express.com/tools/rating/ratequote/v4.0/services/RateQuoteService"/>
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

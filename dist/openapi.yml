@@ -1,0 +1,845 @@
+openapi: 3.0.3
+info:
+  title: Rush ReCommerce API
+  description: An API to serve the needs of the Rush ReCommerce app and Rush
+    Market's partners
+  contact:
+    email: matt@rushmarket.com
+  version: 1.0.0
+servers:
+  - url: /v1
+tags:
+  - name: routing
+    description: Routing APIs
+paths:
+  /routing/returns:
+    parameters: []
+    post:
+      summary: Create Return Operation
+      description: Generates a return address based on the product data and return
+        data provided. Use when you're only interested in sending the product to
+        RUSH Recommerce to process and sell your product.
+      tags:
+        - routing
+      operationId: createReturn
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customerData:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      minLength: 1
+                      description: Name of the customer
+                      example: Jenny Smith
+                    address:
+                      type: string
+                      minLength: 1
+                      description: Address of the customer
+                      example: 123 Main St
+                    city:
+                      type: string
+                      minLength: 1
+                      description: City of the customer
+                      example: Anytown
+                    state:
+                      type: string
+                      minLength: 2
+                      maxLength: 2
+                      pattern: ^[A-Z]{2}$
+                      description: State of the customer
+                      example: NE
+                    zip:
+                      type: string
+                      minLength: 5
+                      maxLength: 5
+                      pattern: ^\d{5}$
+                      description: Zip of the customer
+                      example: "68144"
+                    email:
+                      type: string
+                      format: email
+                      description: Email address of the customer
+                      example: jenny.smith@example.com
+                    phone:
+                      type: string
+                      minLength: 12
+                      maxLength: 12
+                      pattern: ^\d{3}-\d{3}-\d{4}$
+                      description: Phone number of the customer
+                      example: 555-867-5309
+                    rma:
+                      type: string
+                      minLength: 1
+                      maxLength: 50
+                      description: RMA/Order number used as the unique identifier to the return
+                      example: "12345"
+                    marketplaceReturn:
+                      type: string
+                      enum:
+                        - Y
+                        - N
+                      description: Determination if the product was sold/returned from a Marketplace
+                      example: N
+                  required:
+                    - name
+                    - address
+                    - city
+                    - state
+                    - zip
+                    - email
+                    - phone
+                    - rma
+                    - marketplaceReturn
+                  title: CustomerData
+                products:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      vendorSku:
+                        type: string
+                        maxLength: 200
+                        description: A unique identifier for the product, assigned by the merchant
+                        example: XYZ123
+                      productName:
+                        type: string
+                        maxLength: 250
+                        description: A short title for the product
+                        example: Widget A
+                      currentSellingPrice:
+                        type: number
+                        description: The price the product is currently selling at or what it was sold
+                          at prior to the return
+                        example: 54.99
+                      primaryMaterial:
+                        type: string
+                        maxLength: 100
+                        description: Material that makes up the majority of the product
+                        example: Metal
+                      primaryColor:
+                        type: string
+                        maxLength: 100
+                        description: Specific or generic color of product
+                        example: Brown
+                      productHeight:
+                        type: number
+                        description: "Height of product: floor to top"
+                        example: 10
+                      productWidth:
+                        type: number
+                        description: "Width of product: side to side"
+                        example: 10
+                      productDepth:
+                        type: number
+                        description: "Depth of product: front to back"
+                        example: 10
+                      productType:
+                        type: string
+                        maxLength: 100
+                        description: Specific category
+                        example: Widget Category
+                      quantityPerCarton:
+                        type: number
+                        description: Number of complete units per box; sets of 2 or more
+                        example: 1
+                      numberOfBoxes:
+                        type: number
+                        minimum: 1
+                        maximum: 20
+                        description: Count of boxes shipped in
+                        example: 1
+                      packageHeight1:
+                        type: number
+                        description: Package height in inches
+                        example: 12
+                      packageWidth1:
+                        type: number
+                        description: Package width in inches
+                        example: 15
+                      packageLength1:
+                        type: number
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight1:
+                        type: number
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight2:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth2:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength2:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight2:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight3:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth3:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength3:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight3:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight4:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth4:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength4:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight4:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight5:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth5:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength5:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight5:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight6:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth6:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength6:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight6:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight7:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth7:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength7:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight7:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight8:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth8:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength8:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight8:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight9:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth9:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength9:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight9:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight10:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth10:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength10:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight10:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight11:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth11:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength11:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight11:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight12:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth12:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength12:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight12:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight13:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth13:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength13:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight13:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight14:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth14:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength14:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight14:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight15:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth15:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength15:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight15:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight16:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth16:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength16:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight16:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight17:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth17:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength17:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight17:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight18:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth18:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength18:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight18:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight19:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth19:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength19:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight19:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      packageHeight20:
+                        type: number
+                        nullable: true
+                        description: Package height in inches
+                        example: 12
+                      packageWidth20:
+                        type: number
+                        nullable: true
+                        description: Package width in inches
+                        example: 15
+                      packageLength20:
+                        type: number
+                        nullable: true
+                        description: Package length in inches, longest side
+                        example: 108
+                      shippingWeight20:
+                        type: number
+                        nullable: true
+                        description: Shipping weight in pounds
+                        example: 55
+                      shipType:
+                        type: string
+                        enum:
+                          - Small Parcel
+                          - LTL
+                        description: Small Parcel or LTL
+                        example: LTL
+                      mainImageKnockout:
+                        type: string
+                        format: uri
+                        description: Stand alone product with white background; minimum size 500x500,
+                          file format JPG/PNG/GIF
+                        example: https://rushimages.blob.core.windows.net/catalog/products/WJAP/bulk/BC1042_05-1571847771130.jpg
+                      manufacturer:
+                        type: string
+                        maxLength: 100
+                        description: Manufacturer of the product
+                        example: Widget Manufacturer
+                      upc:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: A standard 12 digit numeric string that uniquely identifies the
+                          product
+                      msrp:
+                        type: number
+                        nullable: true
+                        description: Standard list price (MSRP), numerical values only
+                      secondaryMaterial:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: A secondary material of the product
+                      productWeight:
+                        type: number
+                        nullable: true
+                        description: Weight of product in pounds
+                      primaryCategory:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: Main category
+                      productDescription:
+                        type: string
+                        maxLength: 65525
+                        nullable: true
+                        description: A text description of the product
+                        example: This widget is the best widget in the world
+                      bulletPoint1:
+                        type: string
+                        maxLength: 1024
+                        nullable: true
+                        description: Brief descriptive text, called out via a bullet point, regarding a
+                          specific aspect of the product
+                      bulletPoint2:
+                        type: string
+                        maxLength: 1024
+                        nullable: true
+                        description: Brief descriptive text, called out via a bullet point, regarding a
+                          specific aspect of the product
+                      bulletPoint3:
+                        type: string
+                        maxLength: 1024
+                        nullable: true
+                        description: Brief descriptive text, called out via a bullet point, regarding a
+                          specific aspect of the product
+                      bulletPoint4:
+                        type: string
+                        maxLength: 1024
+                        nullable: true
+                        description: Brief descriptive text, called out via a bullet point, regarding a
+                          specific aspect of the product
+                      productPageURL:
+                        type: string
+                        maxLength: 500
+                        nullable: true
+                        description: The URL of the product being returned
+                      altImage3:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: Detail image; alternate angles; knockout or lifestyle; minimum size
+                          500x500, file format JPG/PNG/GIF
+                      altImage4:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: Detail image; alternate angles; knockout or lifestyle; minimum size
+                          500x500, file format JPG/PNG/GIF
+                      altImage5:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: Detail image; alternate angles; knockout or lifestyle; minimum size
+                          500x500, file format JPG/PNG/GIF
+                      swatchImage6:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: Detail image; alternate angles; knockout or lifestyle; minimum size
+                          500x500, file format JPG/PNG/GIF
+                      mainImageLifestyle:
+                        type: string
+                        format: uri
+                        nullable: true
+                        description: Product in product setting; minimum size 500x500, file format
+                          JPG/PNG/GIF
+                      mpn:
+                        type: string
+                        maxLength: 200
+                        nullable: true
+                        description: Manufacturer part number; often found on outside of shipping boxes
+                          - can be same as vendor SKU
+                      partialItem:
+                        type: string
+                        enum:
+                          - Y
+                          - N
+                        nullable: true
+                        description: If product is a complete standalone unit indicate here with (Y/N)
+                      brandName:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: The brand to be displayed online
+                      styleTag1:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: Overall style of product
+                      freightClass:
+                        type: number
+                        nullable: true
+                        description: Freight Class (if applicable); Necessary if ships LTL
+                      countryManufacture:
+                        type: string
+                        maxLength: 100
+                        nullable: true
+                        description: Country where the product is manufactured
+                      nmfcCode:
+                        type: number
+                        nullable: true
+                        description: NMFC Code (if applicable); Necessary if item ships LTL
+                      prop65:
+                        type: string
+                        enum:
+                          - Y
+                          - N
+                        nullable: true
+                        description: California specific - Does it contain toxic chemical known to cause
+                          birth defects
+                      prop65_chemicals:
+                        type: string
+                        maxLength: 1024
+                        nullable: true
+                        description: Chemical names (comma separated list if more than one)
+                      assemblyReqd:
+                        type: string
+                        enum:
+                          - Y
+                          - N
+                        nullable: true
+                        description: Is assembly required?
+                      returnData:
+                        type: object
+                        properties:
+                          disposition:
+                            type: string
+                            minLength: 1
+                            maxLength: 100
+                            description: Return reason as identified by the customer, captured by the
+                              retailer for a particular product
+                            example: Customer Preference - Didn't like color
+                          assembled:
+                            default: N
+                            type: string
+                            enum:
+                              - Y
+                              - N
+                            nullable: true
+                            description: Determination of the customer alerting if the product is out of the
+                              packaging and fully assembled. If the product is
+                              still in the box the assembled data point would be
+                              N
+                            example: N
+                          partialReturn:
+                            default: N
+                            type: string
+                            enum:
+                              - Y
+                              - N
+                            nullable: true
+                            description: Determination if the product being returned is partially being
+                              returned and not in its full form
+                            example: N
+                        required:
+                          - disposition
+                    required:
+                      - vendorSku
+                      - productName
+                      - currentSellingPrice
+                      - primaryMaterial
+                      - primaryColor
+                      - productHeight
+                      - productWidth
+                      - productDepth
+                      - productType
+                      - quantityPerCarton
+                      - numberOfBoxes
+                      - packageHeight1
+                      - packageWidth1
+                      - packageLength1
+                      - shippingWeight1
+                      - shipType
+                      - mainImageKnockout
+                      - manufacturer
+                      - returnData
+                    title: Product
+                  minItems: 1
+              required:
+                - customerData
+                - products
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                    enum:
+                      - Rush Recommerce
+                    description: Rush Recommerce
+                    example: Rush Recommerce
+                  address:
+                    type: string
+                    description: Address of the RUSH recommerce center
+                    example: 3201 S 144th St.
+                  address2:
+                    type: string
+                    description: "Supplier code and Vendor SKU and Unique RMA # to help with
+                      processing upon receipt"
+                    example: XX001-API|XYZ123|12345
+                  city:
+                    type: string
+                    description: City of the RUSH recommerce center
+                    example: Omaha
+                  state:
+                    type: string
+                    description: State of the RUSH recommerce center
+                    example: NE
+                  zip:
+                    type: string
+                    description: Zip of the RUSH recommerce center
+                    example: "68114"
+                required:
+                  - name
+                  - address
+                  - address2
+                  - city
+                  - state
+                  - zip
+        "400":
+          $ref: "#/components/responses/BadRequestError"
+        "401":
+          $ref: "#/components/responses/UnauthenticatedError"
+        "403":
+          $ref: "#/components/responses/UnauthorizedError"
+components:
+  responses:
+    BadRequestError:
+      description: Data provided in the request is invalid - see the response body for
+        details
+    UnauthenticatedError:
+      description: API key is missing or invalid
+    UnauthorizedError:
+      description: Authenticated user does not have access to the requested resource
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-APP-ID
+    JwtAuth:
+      type: apiKey
+      in: header
+      name: X-ACCESS-TOKEN
+security:
+  - ApiKeyAuth: []
+  - ApiKeyAuth: []
+    JwtAuth: []
